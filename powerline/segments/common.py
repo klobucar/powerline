@@ -82,15 +82,15 @@ def cwd(pl, segment_info, dir_shorten_len=None, dir_limit_depth=None, use_path_s
 	Returns a segment list to create a breadcrumb-like effect.
 
 	:param int dir_shorten_len:
-		shorten parent directory names to this length (e.g. 
+		shorten parent directory names to this length (e.g.
 		:file:`/long/path/to/powerline` → :file:`/l/p/t/powerline`)
 	:param int dir_limit_depth:
-		limit directory depth to this number (e.g. 
+		limit directory depth to this number (e.g.
 		:file:`/long/path/to/powerline` → :file:`⋯/to/powerline`)
 	:param bool use_path_separator:
 		Use path separator in place of soft divider.
 	:param str ellipsis:
-		Specifies what to use in place of omitted directories. Use None to not 
+		Specifies what to use in place of omitted directories. Use None to not
 		show this subsegment at all.
 
 	Divider highlight group used: ``cwd:divider``.
@@ -169,7 +169,7 @@ def fuzzy_time(pl, unicode_text=True):
 	'''Display the current time as fuzzy time, e.g. "quarter past six".
 
 	:param bool unicode_text:
-		If true then hyphenminuses (regular ASCII ``-``) and single quotes are 
+		If true then hyphenminuses (regular ASCII ``-``) and single quotes are
 		replaced with unicode dashes and apostrophes.
 	'''
 	hour_str = ['twelve', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven']
@@ -919,7 +919,7 @@ class NowPlayingSegment(object):
 		if not func_stats:
 			return None
 		stats.update(func_stats)
-		return format.encode('utf-8').format(**stats)
+		return format.format(**stats)
 
 	@staticmethod
 	def _convert_state(state):
@@ -1105,7 +1105,7 @@ class NowPlayingSegment(object):
 		}
 
 	def player_rdio(self, pl):
-		now_playing = self._run_cmd(['osascript',
+		now_playing = run_cmd(pl, ['osascript',
 			'-e', 'tell application "System Events"',
 			'-e', 'set rdio_active to the count(every process whose name is "Rdio")',
 			'-e', 'if rdio_active is 0 then',
@@ -1175,18 +1175,18 @@ def battery(pl, format='{capacity:3.0%}', steps=5, gamify=False, full_heart='♥
 		Number of discrete steps to show between 0% and 100% capacity if gamify
 		is True.
 	:param bool gamify:
-		Measure in hearts (♥) instead of percentages. For full hearts 
-		``battery_full`` highlighting group is preferred, for empty hearts there 
+		Measure in hearts (♥) instead of percentages. For full hearts
+		``battery_full`` highlighting group is preferred, for empty hearts there
 		is ``battery_empty``.
 	:param str full_heart:
 		Heart displayed for “full” part of battery.
 	:param str empty_heart:
 		Heart displayed for “used” part of battery. It is also displayed using
-		another gradient level and highlighting group, so it is OK for it to be 
-		the same as full_heart as long as necessary highlighting groups are 
+		another gradient level and highlighting group, so it is OK for it to be
+		the same as full_heart as long as necessary highlighting groups are
 		defined.
 
-	``battery_gradient`` and ``battery`` groups are used in any case, first is 
+	``battery_gradient`` and ``battery`` groups are used in any case, first is
 	preferred.
 
 	Highlight groups used: ``battery_full`` or ``battery_gradient`` (gradient) or ``battery``, ``battery_empty`` or ``battery_gradient`` (gradient) or ``battery``.
@@ -1218,7 +1218,7 @@ def battery(pl, format='{capacity:3.0%}', steps=5, gamify=False, full_heart='♥
 		ret.append({
 			'contents': format.format(capacity=(capacity / 100.0)),
 			'highlight_group': ['battery_gradient', 'battery'],
-			# Gradients are “least alert – most alert” by default, capacity has 
+			# Gradients are “least alert – most alert” by default, capacity has
 			# the opposite semantics.
 			'gradient_level': 100 - capacity,
 		})
